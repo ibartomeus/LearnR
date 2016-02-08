@@ -1,0 +1,27 @@
+---
+title: "test"
+author: "I. Bartomeus"
+date: "8 February 2016"
+output: html_document
+---
+
+Test the Open Movie Database API
+
+
+```{r}
+library(devtools)
+devtools::install_github("hrbrmstr/omdbapi")
+library(omdbapi)
+library(dplyr)
+library(pbapply)
+ 
+search_by_title("Captain America")
+ ```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
