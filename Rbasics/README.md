@@ -27,7 +27,7 @@ _Total horas:_ 16h
 _Plazas:_ 16 (número mínimo para impartir curso 12 alumnos)
 
 _Requisitos / público al que va dirigido:_
-Alumnos que deseen aprender de zero a programar en R para manipular, analizar y visualizar datos.
+Alumnos que deseen aprender de cero a programar en R para manipular, analizar y visualizar datos.
 
 _Requerimientos:_
 
