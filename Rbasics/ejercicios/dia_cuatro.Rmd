@@ -1,0 +1,235 @@
+---
+title: "cuarto_dia"
+author: "I. Bartomeus"
+date: "26 February 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Merging datasets
+========================================================
+  
+  Often, as we clean and reshape data, we want to merge different datasets together. The built-in `merge` command does this well.
+
+Let's say we have a data frame containing information on how pretty each of the `iris` species is:
+
+```{r, echo=FALSE}
+howpretty <- data.frame(Species = unique(iris$Species), 
+pretty = c("ugly", "ok", "lovely"))
+howpretty
+```
+
+
+Merging datasets
+========================================================
+
+`merge` looks for names in common between two data frames, and uses these to merge.
+
+```{r, eval=FALSE}
+merge(iris, howpretty)
+```
+
+```{r, echo=FALSE}
+head(merge(iris, howpretty)[c(1, 2, 6)])
+```
+
+(NB - viewing only a few columns and rows.) The `dplyr` package has more varied, faster database-style join operations.
+
+
+Summarizing and manipulating data
+========================================================
+type: section
+
+
+History lesson
+========================================================
+
+<img src="images/history.png" width="850" />
+
+
+Summarizing and manipulating data
+========================================================
+
+Thinking back to the typical data pipeline, we often want to summarize data by groups as an intermediate or final step. For example, for each subgroup we might want to:
+
+* Compute mean, max, min, etc. (`n`->1)
+* Compute rolling mean and other window functions (`n`->`n`)
+* Fit models and extract their parameters, goodness of fit, etc.
+
+Specific examples:
+
+* `cars`: for each speed, what's the farthest distance traveled?
+* `iris`: how many samples were taken from each species?
+* `babynames`: what's the most common name over time?
+
+
+Split-apply-combine
+========================================================
+
+These are generally known as *split-apply-combine* problems.
+
+<img src="images/split_apply_combine.png" width="600" />
+
+From https://github.com/ramnathv/rblocks/issues/8
+
+
+aggregate
+========================================================
+
+Base R has an `aggregate` function. It's not particularly fast or flexible, and confusingly it has different forms (syntax).
+
+It can however be useful for simple operations:
+  
+  ```{r}
+# What's the farthest distance at each speed?
+aggregate(dist ~ speed, 
+          data = cars, FUN = max)
+```
+
+
+dplyr
+========================================================
+  
+  The newer `dplyr` package specializes in data frames, recognizing that most people use them most of the time.
+
+`dplyr` also allows you to work with remote, out-of-memory databases, using exactly the same tools, because it abstracts away *how* your data is stored.
+
+`dplyr` is **extremely fast**.
+
+
+Operation pipelines in R
+========================================================
+  
+  `dplyr` *imports*, and its examples make heavy use of, the [magrittr](https://github.com/smbache/magrittr) package, which introduces a **pipeline** operator `%>%` to R.
+
+Not everyone is a fan of piping, and there are situations where it's not appropriate; but we'll stick to `dplyr` convention and use it frequently.
+
+
+Operation pipelines in R
+========================================================
+  
+  Standard R notation:
+  
+  ```{r, eval=FALSE}
+x <- read_my_data(f)
+y <- merge_data(clean_data(x), otherdata)
+z <- summarize_data(y)
+```
+
+Notation using a `magrittr` pipeline:
+  
+  ```{r, eval=FALSE}
+read_my_data(f) %>%
+  clean_data %>%
+  merge_data(otherdata) %>%
+  summarize_data ->
+  z
+```
+
+
+Verbs
+========================================================
+  
+  `dplyr` provides functions for each basic *verb* of data manipulation. These tend to have analogues in base R, but use a consistent, compact syntax, and are very high performance.
+
+* `filter()` - subset rows; like `base::subset()`
+* `arrange()` - reorder rows; like `order()`
+* `select()` - select columns
+* `mutate()` - add new columns
+* `summarise()` - like `aggregate`
+
+
+Grouping
+========================================================
+  
+  `dplyr` verbs become particularly powerful when used in conjunction with *groups* we define in the dataset. The `group_by` function converts an existing data frame into a grouped `tbl`.
+
+
+```{r}
+library(dplyr)
+library(babynames)
+babynames %>% group_by(year, sex)
+```
+
+
+Summarizing cars
+========================================================
+  
+  We previously did this using `aggregate`. Now, `dplyr`:
+  
+  ```{r}
+cars %>% 
+  group_by(speed) %>% 
+  summarise(max(dist))
+```
+
+
+Summarizing iris
+========================================================
+  
+  ```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(msl = mean(Sepal.Length))
+```
+
+
+Summarizing iris
+========================================================
+  
+  We can apply (multiple) functions across (multiple) columns.
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise_each(funs(mean, median, sd), 
+                 Sepal.Length)
+```
+
+
+Summarizing babynames
+========================================================
+  
+  What does this calculate?
+
+```{r}
+babynames %>%
+  group_by(year, sex) %>% 
+  summarise(prop = max(prop), 
+            name = name[which.max(prop)])
+```
+
+
+Summarizing babynames
+========================================================
+  
+  <img src="images/popular_babynames.png" width="800" />
+  
+  https://en.wikipedia.org/wiki/Linda_(1946_song)
+
+
+Why use dplyr?
+========================================================
+  
+  In general `dplyr` is ~10x faster than the older `plyr` package.
+
+And `plyr` was ~10x faster than base R.
+
+Base R also tends to require more lines of code.
+
+
+Hands-on: manipulating the `babynames` dataset
+========================================================
+  type: prompt
+incremental: false
+
+Load the dataset using `library(babynames)`. Read its help page. Look at its structure (rows, columns, summary).
+
+Use `dplyr` to calculate the total number of names in the SSA database for each year. 
+
+Calculate the 5th most popular name for girls in each year. Hint: `nth()`.
+
