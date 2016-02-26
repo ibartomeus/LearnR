@@ -1,0 +1,37 @@
+---
+title: "Los documentos dinámicos molan"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+
+
+## Molan sus títulos
+---------------------
+
+Y se puede escribir en ellos, con **negrita**, o *cursiva*
+
+
+## Y lee R!
+
+```{r echo=FALSE} 
+data <- runif(100)
+
+```
+
+Me he inventado `r length(data)` datos.
+
+Molan sus gráficos
+------------------
+
+```{r echo=FALSE}
+# Print results
+library(knitr)
+kable(table(round(data))) 
+```
+
+```{r echo=FALSE}
+# Plot
+plot(data)
+```
+
