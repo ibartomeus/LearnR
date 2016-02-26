@@ -9,7 +9,7 @@
 x <- 3 + 3
 x = 3 + 3
 
-#porque?
+#porque? Prueba esto.
 ##Borra y (si existe)
 rm(y)
 mean(y=1:10) #[1] 5.5
@@ -44,7 +44,7 @@ myvector <- c(1:5)
 myvector <- 1:5
 myvector #teclea my y tab para autocompletar
 
-# crear vectores
+# crear vectores: seq y rep
 myvector <- seq(1, 5)
 myvector <- rep(1, 5)
 myvector
@@ -73,7 +73,7 @@ x <- c(1, 2, 3, NA)
 sum(x) # NA
 sum(x, na.rm = TRUE)
 
-#Otros: NAN, NULL Inf
+#Otros: NAN, NULL Inf...NA puede ser evaluado por funciones NULL no.
 
 # preguntando a R
 which(is.na(myvector)) # == TRUE
@@ -104,7 +104,14 @@ l[[1]][1,2]
 
 #data.frames? mañana...
 
-#distribuciones?
+#distribuciones-----
 
-#r y cbind?
+#R te permite crear distribuciones 
+
+runif(1, 0 , 20)
+
+x <- rnorm(100, mean = 5, sd = 8)
+
+
+
 

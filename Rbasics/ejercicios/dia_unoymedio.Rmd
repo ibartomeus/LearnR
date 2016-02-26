@@ -6,20 +6,20 @@ output: html_document
 ---
 
 
-## Molan sus títulos
+Molan sus títulos
 ---------------------
 
 Y se puede escribir en ellos, con **negrita**, o *cursiva*
 
-
-## Y lee R!
+Molan por que leen R!
+-----------------------
 
 ```{r echo=FALSE} 
 data <- runif(100)
 
 ```
 
-Me he inventado `r length(data)` datos.
+Me he inventado `r length(data)` datos, com media `r mean(data)`
 
 Molan sus gráficos
 ------------------
@@ -27,6 +27,5 @@ Molan sus gráficos
 ```{r echo=FALSE}
 # Plot
 plot(data)
-
 ```
 
