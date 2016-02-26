@@ -138,6 +138,15 @@ summary(lm(jb$imdbRating ~ jb$Year))
 scatter.smooth(jb$Year, jb$imdbRating)
 
 
+
+write.csv(jb, "Rbasics/ejercicios/data/007.csv", row.names = FALSE)
+
+
+
+
+
+
+
 Things you should know: control flow
 ========================================================
   
