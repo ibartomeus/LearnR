@@ -1,3 +1,85 @@
+---
+title: "James Bond: 007"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+  
+  
+## James bond: mola mogollón?
+-----------------------------
+
+```{r echo=FALSE} 
+
+#leer datos de peliculas de James Bond en la carpeta datos con la función read.table o read.csv
+bond <- read.csv("Rbasics/ejercicios/data/007.csv")
+
+#explorar los datos
+str(bond) #data.frame!
+head(bond)
+
+levels(bond$Actors)
+
+#limpiar datos
+colnames(bond)
+#index
+bond2 <- bond[,-35]
+bond2 <- bond[,-"Response"]
+bond2 <- subset(bond, select = -Response))
+#subset
+bond[which(bond$Year > 2000),]
+subset(bond, Year > 2000)
+
+#rescatar actor principal #regex
+bond$Actor_p <- bond$Actor
+
+#guardar datos
+
+write.table(bond, "Rbasics/ejercicios/data/007_edited.csv")
+write.csv()
+save() #Rdata
+
+
+```
+
+## Funciones
+
+se <- function(x){sd(x)/sqrt(x)}
+
+
+## Plots
+
+boxplot()
+points(mean)
+points(jitter())
+plot(jb$Year, jb$imdbRating)
+plot(jb$Year, jb$tomatoMeter)
+plot(jb$Year, jb$tomatoUserRating)
+plot(jb$Year, jb$tomatoRotten)
+#https://en.wikipedia.org/wiki/Rotten_Tomatoes
+plot(jb$imdbRating,jb$tomatoMeter)
+abline(lm(jb$imdbRating ~ jb$Year))
+summary(lm(jb$imdbRating ~ jb$Year))
+scatter.smooth(jb$Year, jb$imdbRating)
+
+No useis
+barplot()
+pie()
+
+## tables/summaries
+
+summary()
+table()
+
+
+Lectura, creación y manipulación avanzada de datos.
+Se trata con mayor extensión algunos temas adelantados en la 1ª sesión. 
+Entradas y Salidas de datos en los formatos mas habituales. 
+Definir nuevas funciones. Introdución a la visualizacion de datos en R y funciones gráficas estándares de R. 
+Se desarrollan las técnicas de tabulación y sumarización de datos con R.
+
+
+
 
 
 Hands-on: examining the `iris` dataset

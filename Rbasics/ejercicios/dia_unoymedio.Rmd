@@ -25,13 +25,8 @@ Molan sus gráficos
 ------------------
 
 ```{r echo=FALSE}
-# Print results
-library(knitr)
-kable(table(round(data))) 
-```
-
-```{r echo=FALSE}
 # Plot
 plot(data)
+
 ```
 
