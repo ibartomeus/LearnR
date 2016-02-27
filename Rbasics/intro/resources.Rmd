@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Resources
 ========================================================
   
-  * [CRAN](http://cran.r-project.org) - The Comprehensive R Archive Network. Ground zero for R.
+* [CRAN](http://cran.r-project.org) - The Comprehensive R Archive Network. Ground zero for R.
 * [GitHub](https://github.com/JGCRI) - The JGCRI organization page on GitHub.
 * [RStudio](http://www.rstudio.com) - the integrated development environment for R. Makes many things hugely easier.
 * [Advanced R](http://adv-r.had.co.nz) - the companion website for “Advanced R”, a book in Chapman & Hall’s R Series. Detailed, in depth look at many of the issues covered here.
@@ -20,20 +20,18 @@ Resources
 Resources
 ========================================================
   
-  R has many contributed *packages* across a wide variety of scientific fields. Almost anything you want to do will have packages to support it.
+- [CRAN task views](https://cran.r-project.org/web/views/) resumenes de tareas (e.g. Bayesiano)
+- e.g. [**Reproducible Research**](http://cran.r-project.org/web/views/ReproducibleResearch.html)
+- [RopenScience](https://ropensci.org/). Paquetes brutales para hacer ciencia abierta
 
-[CRAN](http://cran.r-project.org) also provides "Task Views". For example:
+
+Resources
+========================================================
+
+- [Quick-R](http://www.statmethods.net/): Donde yo voy ha consultar las recetas (PCA's, glm's, etc...)
+- Cursos para empezar:
+  *[r for cats](http://rforcats.net/)
+  *[r-bio](http://r-bio.github.io/01-intro-R/)
+  *[datacamp](https://www.datacamp.com/courses/free-introduction-to-r?utm_source=blog_launch_new_intro&utm_medium=blog&utm_campaign=launch_new_intro)
   
-  ***
-  
-  - Bayesian
-- Clinical Trials
-- Differential Equations
-- Finance
-- Genetics
-- HPC
-- Meta-analysis
-- Optimization
-- [**Reproducible Research**](http://cran.r-project.org/web/views/ReproducibleResearch.html)
-- Spatial Statistics
-- Time Series
+y el [grupo de usuarios de R de Sevilla](https://sevillarusers.wordpress.com)

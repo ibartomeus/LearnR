@@ -10,12 +10,12 @@ Los siguientes 4 días de vuestra vida
 * Introducción (yo hablando; 45')
 * Manipulación Básica de datos (vosotros picando código)
 * Lectura, creación y manipulación avanzada de datos (vosotros picando código)
-* Programación básica con R, packetes externos y modelos lineares (vosotros picando código)
+* Programación básica con R, paquetes externos y modelos lineares (vosotros picando código)
 * Últimos desarrollos para manipular y visualizar datos en R (vosotros picando código)
 
-Feedback: <a href="nacho.bartomeus@gmail.com">Email</a>  
+Feedback: <a href="nacho.bartomeus@gmail.com">Email: nacho.bartomeus@gmail.com</a>  
 
-[Twitter](https://twitter.com/ibartomeus)
+[Twitter @ibartomeus](https://twitter.com/ibartomeus)
 
 
 Como se estructuran las clases
@@ -40,7 +40,7 @@ Los Básicos
 - Download R
 - R desde Rstudio (download Rstudio)
 - [Material del curso](https://github.com/ibartomeus/LearnR)
-- Carpeta 'Exercises' como guia.
+- Carpeta 'ejercicios' y 'guia'
 - Dias 2, 3, y 4 trabajaremos sobre nuestro propio proyecto.
 - Proyecto: Explorar unos datos de pelicula.
 
@@ -75,7 +75,7 @@ No siempre. R tiene limitaciones y debilidades:
 - No esta diseñado para grandes bases de datos (~100 Mb de csv)
 
 Hay otras herramientas:
-- Python, C++, bash, ...
+- Julia, Python, C++, bash, ...
 - Excel? Casi nunca.
 
 
@@ -104,10 +104,25 @@ No puedes reproducir
 - Version control (mejor). **Git** (y **GitHub**) es el más popular
 
 
-Ejemplo de reproducibilidad
-========================================================
+
+Presentaciones
+=======================================================
+
+Yo soy ecólogo, y tu?
+
+
+
+Abrir R studio
+=============================================
+
+- scripts
+- consola
+- environment
+- files/plots
+
 
 Trabajando con proyectos.
+========================================================
 
 Directorio tipico:
 ```
@@ -120,20 +135,13 @@ figures/
 ```
 
 
-Abrir R studio
-=============================================
-
-- scripts
-- consola
-- environment
-- files/plots
-
 Guias de estilo
 ==============================================
 
->Da igual cual sigas, lo importante es tener uno
+>Da igual cual sigas, lo importante es tener uno <small>I. Bartomeus</small>
 
 El mio es [este](https://github.com/ibartomeus/misc_func/blob/master/Style.md)
+El de google [este](https://google.github.io/styleguide/Rguide.xml)
 
 
 Introducción a Rmarkdown.
