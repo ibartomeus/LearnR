@@ -20,7 +20,7 @@ Se trata con mayor extensión algunos temas adelantados en la 1ª sesión. Entra
 Se realiza una introducción a las estructuras de programación clásicas en R: estructuras de control y bucles y se muestran las alternativas de vectorización para trabajar sin bucles en R. Se dan algunas pinceladas de como se resolver modelos lineales con R y por últimos se enseña como modificar y personalizas el aspecto por defecto de los gráficos de R.
 
 4) Últimos desarrollos para manipular y visualizar datos en R.
-Se introducen gramáticas gráficas alternativas, de gran desarrollo en los últimos años como ggplot2. Paquetes avanzados de manipulación de datos. Se finalizará con recomendaciones y lista recursos de para de aprendizaje de R.
+Se introducen gramáticas gráficas alternativas, de gran desarrollo en los últimos años como ggplot2. Paquetes avanzados de manipulación de datos. Se finalizará con recomendaciones y lista de recursos para el aprendizaje de R.
 
 _Total horas:_ 16h
 

@@ -61,7 +61,7 @@ boxplot(bond$imdbRating)
 # y lo ponemos bonito
 boxplot(bond$imdbRating, las = 1, main = "IMDB rating")
 # añadimos tomatoUserRating
-boxplot(bond$imdbRating, bond$tomatoUserRating, las = 1, names = c("IMDB", "Tomatoes"),
+boxplot(bond$imdbRating, bond$tomatoUserRating*2, las = 1, names = c("IMDB", "Tomatoes"),
         main = "Rating", ylim = c(0,10))
 abline(h = 5, lty = 2)
 

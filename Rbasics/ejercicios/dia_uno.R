@@ -111,7 +111,7 @@ l[[1]][1,2]
 runif(1, 0 , 20)
 
 x <- rnorm(100, mean = 5, sd = 8)
-
+hist(x)
 
 
 
