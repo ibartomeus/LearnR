@@ -1,89 +1,81 @@
-#get data for day 2
+---
+title: "James Bond: 007 v.2.0"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+  
+  
+James Bond: realmente mola mogollón?
+------------------------------------
 
+```{r, echo=FALSE} 
+load("Rbasics/ejercicios/data/007_edited.R")
+
+#modelo linear
+plot(bond$Year, bond$tomatoRotten)
+
+#funciones base lm (formula)
+m <- lm(bond$tomatoRotten ~ bond$Year * bond$Rated)
+summary(m)
+#g < gp < gp-13
+table(bond$Rated)
+levels(bond$Rated) <- c("G", "PG", "PG", "PG", "PG-13")
+levels(bond$Rated)
+m <- lm(bond$tomatoRotten ~ bond$Year * bond$Actor_p) #pensar en ello!
+summary(m)
+anova(m)
+plot(m)
+plot(bond$Year, bond$tomatoRotten, col = bond$Rated)
+abline(m)
+
+#paquetes en CRAN
+install.packages("car")
+library(car)
+#tipo I (por defecto, factores entran secuanciales)
+Anova(m, type = "II") #tipe 2, los factores se evaluan a la vez
+Anova(m, type = "III") #tipo tres, recomendado cuando hay interacciones.
+
+#en este caso, podemos simplificar el modelo
+m <- lm(bond$tomatoRotten ~ bond$Year)
+summary(m)
+anova(m)
+plot(m)
+plot(bond$Year, bond$tomatoRotten, col = bond$Rated, las = 1, 
+     ylab = "Rotten tomatoes", xlab = "Year of release", main = "007")
+abline(m)
+```
+
+La pelis de James Bond son cada vez más malas según la crítica (`r round(anova(m)[1,5]
+))con con una pendiente de (`r round(coef(m)[2]),2)
+
+```{r}
+
+Ahora vamos a ver como consegui los datos de James Bond
+#paquetes in otros repositorios (e.g. github)
+install.packages("devtools")
 library(devtools)
 install_github("ibartomeus/omdbapi")
+# Asi es como construi los datos de James Bond
 library(omdbapi)
 library(dplyr)
-library(pbapply)
-#library(httr)
 
-batman <- data.frame()
-x = 0
-i = 1
-while(x < 1){
-  temp <- as.data.frame(search_by_title("Batman", page = i))
-  if(length(temp) == 0){x = 1}
-  batman <- rbind(batman, temp)
-  i = i + 1
-  print(i)
-}
-search_by_title("Batman", page = 1)
-search_by_title("Batman", page = 2)
-search_by_title("Batman", page = 28)
-search_by_title("Batman", page = 29)
+#hacer función para bajar pelis 
 
-#filter
-batman2 <- subset(batman, Type == "movie" ,select = -Poster)
-head(batman2)
-batman2
-max(batman2$Year)
-min(batman2$Year)
-
-#?bind_rows
-allbatman <- bind_rows(lapply(batman2$imdbID, function(x) {
-  find_by_id(x, include_tomatoes = TRUE)
-}))
-
-head(allbatman)
-
-#x <-  find_by_id(batman$imdbID[1], include_tomatoes = TRUE)
-#str(x)
-
-boxplot(allbatman$tomatoUserMeter, horizontal=TRUE, main="Tomato User Meter", ylim=c(0, 100))
-boxplot(allbatman$imdbRating, horizontal=TRUE, main="IMDB Rating", ylim=c(0, 10))
-boxplot(allbatman$tomatoUserRating, horizontal=TRUE, main="Tomato User Rating", ylim=c(0, 5))
-
-plot(allbatman$Year, allbatman$tomatoUserMeter)
-
-
-#James bond
-get_all <- function(query, limit = 10){
-  ids <- data.frame()
-  x = 0
-  i = 1
-  while(x < 1){
-    temp <- as.data.frame(search_by_title(query, page = i))
-    if(length(temp) == 0){x = 1}
-    ids <- rbind(ids, temp)
-    i = i + 1
-    if (i == limit) break
-    print(i)
-  }
-  #filter
-  ids2 <- subset(ids, Type == "movie" ,select = -Poster)
-  #get all
-  all <- bind_rows(lapply(ids2$imdbID, function(x) {
-    find_by_id(x, include_tomatoes = TRUE)
-  }))
+#primero un poco de background (for's y if's)
+if(sum(1:4) == 10) {
+  print("right!")
+} else {
+  print("wrong!")
 }
 
-jb <- get_all("James Bond")
+for(i in 1:4) { print(i) }
 
-head(jb)
+#funciones 
 
-as.data.frame(jb[,c(1,2,5,6,13,16)])
+search_by_title("Batman", page = i)
 
-boxplot(jb$tomatoUserMeter, horizontal=TRUE, main="Tomato User Meter", ylim=c(0, 100))
-boxplot(jb$imdbRating, horizontal=TRUE, main="IMDB Rating", ylim=c(0, 10))
-boxplot(jb$tomatoUserRating, horizontal=TRUE, main="Tomato User Rating", ylim=c(0, 5))
-
-jb$Year <- as.numeric(jb$Year)
-plot(jb$Year, jb$imdbRating)
-abline(lm(jb$imdbRating ~ jb$Year))
-summary(lm(jb$imdbRating ~ jb$Year))
-
-
-
+#todas las pelis de James Bond:
 titles <- c("Dr. No",
             "From Russia with Love",
             "Goldfinger",
@@ -109,7 +101,29 @@ titles <- c("Dr. No",
             "Skyfall",
             "Spectre")
 
-#qlist <- titles #to debug
+
+#Primero vamos a buscar una
+
+#search_by_title()
+temp <- search_by_title(titles[1])
+temp <- temp[1,]
+#ID_download() baja toda la información para una serie de ID's.
+all <- ID_download(temp$imdbID)
+all$Year <- as.numeric(all$Year)
+all <- as.data.frame(all)
+
+#ahora todas (for)
+ids <- data.frame()
+for(i in 1:length(titles)){
+  temp <- as.data.frame(search_by_title(titles[i]))
+  ids <- rbind(ids, temp[1,])
+}
+all <- ID_download(ids2$imdbID)
+all$Year <- as.numeric(all$Year)
+all <- as.data.frame(all)
+
+
+#Finalmente, lo funcionalizamos
 get_list <- function(qlist){
 ids <- data.frame()
 for(i in 1:length(qlist)){
@@ -119,71 +133,45 @@ for(i in 1:length(qlist)){
 #filter
 ids2 <- subset(ids, Type == "movie" ,select = -Poster)
 #get all
-all <- bind_rows(lapply(ids2$imdbID, function(x) {
-  find_by_id(x, include_tomatoes = TRUE)
-}))
+all <- ID_download(ids2$imdbID)
+all$Year <- as.numeric(all$Year)
+all <- as.data.frame(all)
+all
 }
 
 jb <- get_list(titles)
-as.data.frame(jb)
-jb$Year <- as.numeric(jb$Year)
-plot(jb$Year, jb$imdbRating)
-plot(jb$Year, jb$tomatoMeter)
-plot(jb$Year, jb$tomatoUserRating)
-plot(jb$Year, jb$tomatoRotten)
-#https://en.wikipedia.org/wiki/Rotten_Tomatoes
-plot(jb$imdbRating,jb$tomatoMeter)
-abline(lm(jb$imdbRating ~ jb$Year))
-summary(lm(jb$imdbRating ~ jb$Year))
-scatter.smooth(jb$Year, jb$imdbRating)
+#write.csv(jb, "Rbasics/ejercicios/data/007.csv", row.names = FALSE)
 
+#Ahora ya puedes buscar las pelis que quieras!
 
+```
 
-write.csv(jb, "Rbasics/ejercicios/data/007.csv", row.names = FALSE)
-
-
-
-
-
-
-
-Things you should know: control flow
-========================================================
-  
-  - Basic  *control flow* statements
 
 ```{r}
-if(sum(1:4) == 10) {
-  print("right!")
-} else {
-  print("wrong!")
+#Apendice: otro ejemplo con batman----
+
+#batman da muchas paginas de resultados. Creamos una funcion para pillarlos todos.
+get_all <- function(query, limit = 10){
+  ids <- data.frame()
+  x = 0
+  i = 1
+  while(x < 1){
+    temp <- as.data.frame(search_by_title(query, page = i))
+    if(length(temp) == 0){x = 1}
+    ids <- rbind(ids, temp)
+    i = i + 1
+    if (i == limit) break
+    print(i)
+  }
+  #filter
+  ids2 <- subset(ids, Type == "movie" ,select = -Poster)
+  #get all
+  all <- ID_download(ids2$imdbID)
 }
+
+batman <- get_all("Batman")
+
 ```
 
-```{r}
-for(i in 1:4) { cat(i) }
-```
 
-
-Things you should know: packages
-========================================================
-  
-  - *Packages* are pieces of software that can be loaded into R. There are thousands, for all kinds of tasks and needs.
-
-```{r, eval=FALSE}
-# The single most popular package is `ggplot2`
-library(ggplot2)
-
-# qplot = quick plot
-qplot(speed, 
-      dist, 
-      data = cars)
-```
-
-***
-  
-  ```{r, echo=FALSE}
-library(ggplot2)
-theme_set(theme_bw())
-qplot(speed, dist, data=cars)
-```
+#par(fmrow!!!)
