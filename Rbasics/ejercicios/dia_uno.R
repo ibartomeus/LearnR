@@ -1,26 +1,32 @@
+#Es bueno describir que contiene tu script. 
+#Este sera una introducción al lenguaje de programación R
+
 #para empezar------
-#esto es un comentario
+
+#las almohadillas son comentarios
 #los comentarios explican "por que" haces algo, no lo que haces.
 
-#vamos a usar R como una calculadora. suma dos numeros
+#vamos a usar R como una calculadora. suma dos numeros:
 3 + 3
 
-#guarda el valor (<- "alt-")
+#guarda el valor (<- atajo de teclado: "alt-"):
 x <- 3 + 3
 x = 3 + 3
 
-#porque? Prueba esto.
-##Borra y (si existe)
-rm(y)
-mean(y=1:10) #[1] 5.5
-y #Error: object 'x' not found
+#porque usar <-  i no = ? Prueba esto:
+rm(x) #rm brra el objeto (si existe)
+mean(x = 1:10) #[1] 5.5
+x #Error: object 'x' not found
 #vs.
-mean(y <- 1:10)# [1] 5.5
-y # [1] 1 2 3 4 5 6 7 8 9 10
+mean(x <- 1:10)# [1] 5.5
+x # [1] 1 2 3 4 5 6 7 8 9 10
+############################
+
 
 # usa x (mira en environment)
+x <- 3 + 3
 x + 2
-(x <- x + 2)
+(x <- x + 2) #entre parasentesis, te uestra el resultado en la consola
 
 # R tiene muchas funciones de serie (e.g. logaritmo)
 log(x) #nombre de funcion(argumentos); #usa el tab para ver argumentos!
@@ -54,7 +60,7 @@ myvector * 2
 myvector + 2
 myvector * myvector
 c(myvector, myvector)
-log(myvector)
+log(myvector) 
 sum(myvector)
 
 # ojo, R recicla valores
@@ -68,7 +74,7 @@ myvector <- c(1, NA, 3, 4, 5)
 is.na(myvector)
 any(is.na(myvector))
 
-# pero las funcionen suelen fallar
+# pero las funcionen pueden fallar cuando hay NA's
 x <- c(1, 2, 3, NA)
 sum(x) # NA
 sum(x, na.rm = TRUE)
@@ -89,7 +95,8 @@ myvector[!is.na(myvector)]
 
 # matrices
 
-(m <- matrix(myvector, nrow = 5, ncol = 2, byrow = FALSE))
+(m <- matrix(myvector, nrow = 5, ncol = 2, byrow = FALSE)) #fijate que aquí 
+ #recicla el vector!
 
 #index
 m[2,1]
@@ -112,6 +119,7 @@ runif(1, 0 , 20)
 
 x <- rnorm(100, mean = 5, sd = 8)
 hist(x)
-
+mean(x)
+sd(x)
 
 

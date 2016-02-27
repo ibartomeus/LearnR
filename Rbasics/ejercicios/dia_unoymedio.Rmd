@@ -19,7 +19,7 @@ data <- runif(100)
 
 ```
 
-Me he inventado `r length(data)` datos, com media `r mean(data)`
+Me he inventado `r length(data)` datos, y su media es `r mean(data)`
 
 Molan sus gráficos
 ------------------
