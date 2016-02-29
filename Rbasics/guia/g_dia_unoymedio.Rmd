@@ -1,0 +1,31 @@
+---
+title: "Los documentos dinámicos molan"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+
+
+Molan sus títulos
+---------------------
+
+Y se puede escribir en ellos, con **negrita**, o *cursiva*
+
+Molan por que leen R!
+-----------------------
+
+```{r echo=FALSE} 
+data <- runif(100)
+
+```
+
+Me he inventado `r length(data)` datos, y su media es `r mean(data)`
+
+Molan sus gráficos
+------------------
+
+```{r echo=FALSE}
+# Plot
+plot(data)
+```
+

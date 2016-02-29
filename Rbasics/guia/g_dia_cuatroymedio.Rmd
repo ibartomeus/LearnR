@@ -1,0 +1,27 @@
+---
+title: "James Bond: realmente mola mogollón?"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+  
+Aún Gusta el agente 007?
+------------------------------------
+
+```{r, echo = FALSE, results='hide', message=FALSE}
+#cargamos datos y librerias
+load("data/bond.R")
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+
+#vamos a poner los dos ratings en un mismo plot
+#select and scale usando dplyr
+
+#melt
+
+#plot
+
+```
+
+

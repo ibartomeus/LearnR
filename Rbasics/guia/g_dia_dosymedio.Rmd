@@ -1,0 +1,52 @@
+---
+title: "James Bond: realmente mola mogollón?"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+  
+  
+```{r, echo=FALSE} 
+#leer datos 
+
+#rescatar actor principal #grep y substr
+
+# Cargar funciones que necesitaremos SE
+
+```
+
+## Pregunta: Gusta 007?
+
+```{r, echo = FALSE}
+
+#boxplot de imdbRating
+```
+
+## Aun gusta el agente 007?
+
+```{r, echo = FALSE}
+# Que opina la gente imdbRating
+
+# Y que opina la citica tomatoRotten #https://en.wikipedia.org/wiki/Rotten_Tomatoes
+
+
+```
+
+## Y que actor esta mejor valorado?
+  
+```{r, echo = FALSE}
+#calcular medias y barplot
+
+#añadimos SE
+
+#ordenar igual y añadir barras de error
+
+```
+
+
+
+
+
+
+
+
