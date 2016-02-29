@@ -1,39 +1,34 @@
----
-title: "James Bond: 007 v.2.0"
-author: "I. Bartomeus"
-date: "23 Febrero 2016"
-output: html_document
----
-  
-  
-James Bond: realmente mola mogollón?
-------------------------------------
+#Este script explora modelos lineares, loops y funciones más complejas
 
-```{r, echo=FALSE} 
-load("Rbasics/ejercicios/data/007_edited.R")
 
-#modelo linear
+# Primero cargamos los datos que cremos ayer (load)
+load("Rbasics/ejercicios/data/bond.R")
+
+# Y volvemos a visualizar las críticas en función del año
 plot(bond$Year, bond$tomatoRotten)
 
 #funciones base lm (formula)
-m <- lm(bond$tomatoRotten ~ bond$Year * bond$Rated)
+m <- lm(bond$tomatoRotten ~ bond$Year * bond$Actor_p)
 summary(m)
-#g < gp < gp-13
-table(bond$Rated)
-levels(bond$Rated) <- c("G", "PG", "PG", "PG", "PG-13")
-levels(bond$Rated)
-m <- lm(bond$tomatoRotten ~ bond$Year * bond$Actor_p) #pensar en ello!
+table(bond$Actor_p)
+levels(bond$Actor_p)
+bond$Actor_p2 <- as.factor(bond$Actor_p)
+levels(bond$Actor_p2)[2] <- "other"
+levels(bond$Actor_p2)[6] <- "other"
+
+m <- lm(bond$tomatoRotten ~ bond$Year * bond$Actor_p2) #pensar en ello!
 summary(m)
 anova(m)
 plot(m)
-plot(bond$Year, bond$tomatoRotten, col = bond$Rated)
-abline(m)
+plot(bond$Year, bond$tomatoRotten, col = bond$Actor_p2)
 
 #paquetes en CRAN
-install.packages("car")
+#install.packages("car")
 library(car)
 #tipo I (por defecto, factores entran secuanciales)
-Anova(m, type = "II") #tipe 2, los factores se evaluan a la vez
+m <- lm(bond$tomatoRotten ~ bond$Actor_p2 * bond$Year)
+anova(m)
+Anova(m, type = "II") #tipo 2, los factores se evaluan a la vez
 Anova(m, type = "III") #tipo tres, recomendado cuando hay interacciones.
 
 #en este caso, podemos simplificar el modelo
@@ -41,17 +36,13 @@ m <- lm(bond$tomatoRotten ~ bond$Year)
 summary(m)
 anova(m)
 plot(m)
-plot(bond$Year, bond$tomatoRotten, col = bond$Rated, las = 1, 
+plot(bond$Year, bond$tomatoRotten, col = bond$Actor_p2, las = 1, 
      ylab = "Rotten tomatoes", xlab = "Year of release", main = "007")
 abline(m)
-```
 
-La pelis de James Bond son cada vez más malas según la crítica (`r round(anova(m)[1,5]
-))con con una pendiente de (`r round(coef(m)[2]),2)
 
-```{r}
 
-Ahora vamos a ver como consegui los datos de James Bond
+#Ahora vamos a ver como consegui los datos de James Bond
 #paquetes in otros repositorios (e.g. github)
 install.packages("devtools")
 library(devtools)
@@ -108,6 +99,7 @@ titles <- c("Dr. No",
 temp <- search_by_title(titles[1])
 temp <- temp[1,]
 #ID_download() baja toda la información para una serie de ID's.
+source("Rbasics/utils/ID_download.R")
 all <- ID_download(temp$imdbID)
 all$Year <- as.numeric(all$Year)
 all <- as.data.frame(all)
@@ -118,7 +110,7 @@ for(i in 1:length(titles)){
   temp <- as.data.frame(search_by_title(titles[i]))
   ids <- rbind(ids, temp[1,])
 }
-all <- ID_download(ids2$imdbID)
+all <- ID_download(ids$imdbID)
 all$Year <- as.numeric(all$Year)
 all <- as.data.frame(all)
 
@@ -140,17 +132,15 @@ all
 }
 
 jb <- get_list(titles)
+head(jb)
 #write.csv(jb, "Rbasics/ejercicios/data/007.csv", row.names = FALSE)
 
-#Ahora ya puedes buscar las pelis que quieras!
+#Ahora ya puedes buscar las pelis que quieras por titulo!
 
-```
-
-
-```{r}
 #Apendice: otro ejemplo con batman----
 
-#batman da muchas paginas de resultados. Creamos una funcion para pillarlos todos.
+#batman ( o hatty potter o alien) da muchas paginas de resultados. 
+#Creamos una funcion para pillarlos todos.
 get_all <- function(query, limit = 10){
   ids <- data.frame()
   x = 0
@@ -171,7 +161,3 @@ get_all <- function(query, limit = 10){
 
 batman <- get_all("Batman")
 
-```
-
-
-#par(fmrow!!!)

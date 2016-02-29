@@ -1,0 +1,38 @@
+---
+title: "James Bond: realmente mola mogollón?"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+
+  
+Aún Gusta el agente 007?
+------------------------------------
+
+```{r, echo = FALSE, results='hide'}
+#cargamos datos
+load("data/bond.R")
+
+#modelo linear
+m <- lm(bond$tomatoRotten ~ bond$Year)
+summary(m)
+anova(m)
+#plot(m)
+par(mfrow = c(1,2))
+plot(bond$Year, bond$tomatoRotten, col = bond$Rated, las = 1, 
+     ylab = "Rotten tomatoes", xlab = "Year of release", main = "Crítica")
+abline(m)
+m2 <- lm(bond$imdbRating ~ bond$Year)
+summary(m2)
+anova(m2)
+plot(bond$Year, bond$imdbRating, col = bond$Rated, las = 1, 
+     ylab = "IMDB rating", xlab = "Year of release", main = "Usuarios")
+abline(m2)
+par(mfrow = c(1,1))
+```
+
+La pelis de *James Bond* son cada vez más malas según la crítica (p = `r round(anova(m)[1,5],3)`) con con una pendiente de `r round(coef(m)[2],2)`
+
+Pasa lo misno con Harry Potter?
+--------------------------------
+

@@ -1,0 +1,68 @@
+---
+title: "James Bond: realmente mola mogollón?"
+author: "I. Bartomeus"
+date: "23 Febrero 2016"
+output: html_document
+---
+  
+  
+```{r, echo=FALSE} 
+#leer datos 
+bond <- read.csv("data/007.csv")
+#rescatar actor principal #grep y substr
+bond$Actor_p <- substr(bond$Actor, 1, regexpr(pattern = ",", bond$Actor)-1)
+
+# Funciones que necesitaremos SE
+se <- function(x){sd(x)/sqrt(length(x))}
+
+```
+
+## Pregunta: Gusta 007?
+
+```{r, echo = FALSE}
+
+#boxplot de imdbRating
+boxplot(bond$imdbRating, las = 1, main = "IMDB rating", 
+        cex = 0)
+points(mean(bond$imdbRating), pch = 19, col = "red")
+points(jitter(rep(1, length(bond$imdbRating)), 4), bond$imdbRating)
+```
+
+## Aun gusta el agente 007?
+
+```{r, echo = FALSE}
+# Que opina la gente imdbRating
+scatter.smooth(bond$Year, bond$imdbRating, xlab = "Year", ylab = "Ratting", las = 1,
+               main = "Usuarios")
+# Y que opina la citica tomatoRotten #https://en.wikipedia.org/wiki/Rotten_Tomatoes
+scatter.smooth(bond$Year, 100 - bond$tomatoRotten, xlab = "Year", ylab = "Ratting", 
+               las = 1, main = "Critica")
+
+
+```
+
+## Y que actor esta mejor valorado?
+  
+```{r, echo = FALSE}
+mean_ratings <- tapply(bond$imdbRating, bond$Actor_p, mean)
+mean_ratings <- sort(mean_ratings, decreasing = TRUE)
+bp <- barplot(mean_ratings, las = 1, ylim = c(0,10), cex.names = 0.75)
+#añadimos SE
+se_ratings <- tapply(bond$imdbRating, bond$Actor_p, se)
+#ordenar igual
+se_ratings <- se_ratings[names(sort(mean_ratings, decreasing = TRUE))]
+arrows(x0 = bp,
+       x1 = bp,
+       y0 = mean_ratings - se_ratings,
+       y1 = mean_ratings + se_ratings,
+       las = 1, angle = 90, code = 3)
+
+```
+
+
+
+
+
+
+
+
