@@ -26,10 +26,10 @@ x # [1] 1 2 3 4 5 6 7 8 9 10
 # usa x (mira en environment)
 x <- 3 + 3
 x + 2
-(x <- x + 2) #entre parasentesis, te uestra el resultado en la consola
+(x <- x + 2) #entre parasentesis, te muestra el resultado en la consola
 
 # R tiene muchas funciones de serie (e.g. logaritmo)
-log(x) #nombre de funcion(argumentos); #usa el tab para ver argumentos!
+log(x) #nombre de función(argumentos); #usa el tab para ver argumentos!
 
 # Pedir ayuda
 ?log
@@ -45,6 +45,7 @@ str(z)
 
 # tipos de objetos de datos: vectores
 
+#4 formas de escribir el mismo vector
 myvector <- c(1, 2, 3, 4, 5)
 myvector <- c(1:5)
 myvector <- 1:5
@@ -55,7 +56,7 @@ myvector <- seq(1, 5)
 myvector <- rep(1, 5)
 myvector
 
-# operar con vectores
+# operar con vectores (c, log y sum)
 myvector * 2
 myvector + 2
 myvector * myvector
@@ -67,24 +68,22 @@ sum(myvector)
 1:5 * 1:15 #util, pero peligroso
 1:5 + 1:4
 
-# no available
+#data no available
 myvector <- c(1, , 3, 4, 5) #fails
 myvector <- c(1, NA, 3, 4, 5)
-# R reconoce los NA's!
+# R reconoce los NA's! (is.na)
 is.na(myvector)
-any(is.na(myvector))
 
-# pero las funcionen pueden fallar cuando hay NA's
+# pero las funcionen pueden fallar cuando hay NA's (sum)
 x <- c(1, 2, 3, NA)
 sum(x) # NA
 sum(x, na.rm = TRUE)
 
 #Otros: NAN, NULL Inf...NA puede ser evaluado por funciones NULL no.
 
-# preguntando a R
+# preguntando a R (which)
 which(is.na(myvector)) # == TRUE
 which(myvector == 3)
-
 
 # subsetting / indexing []
 myvector[2]
@@ -94,27 +93,23 @@ myvector[-c(2:3)] #por que? R tiene sus rarezas.
 myvector[!is.na(myvector)]
 
 # matrices
-
 (m <- matrix(myvector, nrow = 5, ncol = 2, byrow = FALSE)) #fijate que aquí 
- #recicla el vector!
+ #reciclamos el vector!
 
 #index
 m[2,1]
 m[,1]
 
 #lists
-
 l <- list(m, myvector)
 l[[1]][1,2]
 
 # arrays (n-dimensional matrices..)
-
-#data.frames? mañana...
+# data.frames? mañana...
 
 #distribuciones-----
 
-#R te permite crear distribuciones 
-
+#R te permite crear distribuciones (runif i rnorm)
 runif(1, 0 , 20)
 
 x <- rnorm(100, mean = 5, sd = 8)

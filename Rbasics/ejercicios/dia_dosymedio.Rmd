@@ -12,7 +12,7 @@ bond <- read.csv("data/007.csv")
 #rescatar actor principal #grep y substr
 bond$Actor_p <- substr(bond$Actor, 1, regexpr(pattern = ",", bond$Actor)-1)
 
-# Funciones que necesitaremos SE
+# Cargar funciones que necesitaremos SE
 se <- function(x){sd(x)/sqrt(length(x))}
 
 ```

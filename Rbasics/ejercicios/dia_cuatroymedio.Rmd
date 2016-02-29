@@ -15,21 +15,20 @@ library(ggplot2)
 library(reshape2)
 library(dplyr)
 
-#vamos ha poner los dos ratings en un mismo plot
-#select and scale using dplyr
+#vamos a poner los dos ratings en un mismo plot
+#select and scale usando dplyr
 colnames(bond)
 bond2 <- bond %>% 
   select(Actor_p, Title, Year, imdbRating, tomatoRotten) %>% 
-  mutate(imdbRating = scale(imdbRating), tomatoRotten = scale(imdbRating)) 
+  mutate(imdbRating = scale(imdbRating), tomatoRotten = scale(tomatoRotten)) 
   
 str(bond2)
+#melt
 bond2$imdbRating <- as.vector(bond2$imdbRating)
 bond2$tomatoRotten <- as.vector(bond2$tomatoRotten)
 bond3 <- melt(bond2, id.vars =  c("Actor_p", "Title", "Year"), 
                     variable.name = "Rating")
-
 #plot
-str(bond3)
 ggplot(data=bond3, aes(x=Year, y=value, color = Rating)) +  
   geom_point() +
   geom_smooth(method="lm", se=TRUE)

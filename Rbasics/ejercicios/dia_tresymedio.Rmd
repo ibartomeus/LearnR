@@ -18,6 +18,7 @@ m <- lm(bond$tomatoRotten ~ bond$Year)
 summary(m)
 anova(m)
 #plot(m)
+#vamos a poner los dos plots (imdbRating y tomatoRotten) en paneles: par(mfrow)
 par(mfrow = c(1,2))
 plot(bond$Year, bond$tomatoRotten, col = bond$Rated, las = 1, 
      ylab = "Rotten tomatoes", xlab = "Year of release", main = "Crítica")
