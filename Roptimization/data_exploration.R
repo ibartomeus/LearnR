@@ -16,6 +16,7 @@ summary(m)
 plot(dat$extinction_risck ~ dat$body_size)
 abline(m)
 plot(m)
+scatter.smooth(dat$extinction_risck ~ dat$body_size)
 
 #take home message. ALways plot your data
 
