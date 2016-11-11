@@ -1,15 +1,19 @@
-#Data exploration
+#This script explore different datasets as a way to teach R programming lenguage
 
-#Read this dataset and explore it.-----
+#Exercise 1: Read the dataset "extinction" in the folder "data", 
+  #explore it and do some analysis-----
 
 #read data
-dat <- read.csv("Roptimization/data/extinction.csv", h = TRUE)
+dat <- read.csv("data/extinction.csv", h = TRUE)
 
+#explore data
 head(dat)
 str(dat)
 summary(dat)
 hist(dat$body_size)
 hist(dat$extinction_risck)
+
+#preliminar analysis
 cor.test(dat$extinction_risck, dat$body_size)
 m <- lm(dat$extinction_risck ~ dat$body_size)
 summary(m)
@@ -20,24 +24,52 @@ scatter.smooth(dat$extinction_risck ~ dat$body_size)
 
 #take home message. Always plot your data
 
-#Add example ascombe quartet?
+#Manipulación de datos----
 
-#Optimizando el uso de R: 
-#Rstudio, subsetting, loops, if, funciones, 
-#vectorización (familia apply), tidyr y dplyr, joins, reshape, merge
+#load 2 datasets, check, make summary statistics of one and merge
 
-#rescatar actor principal #grep y substr
-position <- regexpr(pattern = ",", bond$Actor)
-bond$Actor_p <- substr(bond$Actor, 1, position-1)
-#hacer lo mismo con Runtime
+#sites data:
+sites <- read.csv("data/bumblebee_sites.csv", h=T)
+head(sites)
+#we need unique sites
+unique(sites$Site)
+#reshape package
+#install.packages("reshape2")
+library(reshape2)
+sites2 <- dcast(data = sites, formula = Site + Corridor ~ . , fun.aggregate = mean, value.var = "landscape")
+sites2
+colnames(sites2)[3] <- "landscpae"
+sites2
 
-#Este script juega con ggplot2, reshape2 y dplyr
+#occurrence data:
+occ <- read.csv("data/bumblebees.csv", h=T)
+head(occ)
+#fix species
+table(occ$Gen_sp)
+levels(occ$Gen_sp)[20] <- "Bombus_terrestris"
+levels(occ$Gen_sp)[which(occ$Gen_sp == "Bombus_terrestre")] <- "Bombus_terrestris"
+#remove species
+occ2 <- subset(occ, !Gen_sp %in% c("Bombus_spp", "Bombus_spp."))
+
+head(occ)
+#Get plant genus! #grep y substr
+position <- regexpr(pattern = "_", occ2$Flower_species)
+occ2$plant_genus <- substr(occ2$Flower_species, 1, position-1)
+#joins, reshape, merge
+
+dat <- merge(occ2, sites2, by = "Site", all = TRUE)
+str(occ2)
+str(sites2)
+str(dat)
+head(dat)
 
 # Ejercicio dplyr----
 # usar pipes (this is not a %>% )
 
-#vamos a cambiar de pelicula y crear 50 sobras de grey.
+#vamos jugar a las peliculas y crear 50 sobras de grey.
 ?grey
+grey(c(0.1,0.3,0.4))
+
 #crea una función llamada sombras que te de n numeros sequenciales entre 0 y 1
 sombras <- function(n){
   seq(0,1, length.out = n)  
@@ -51,11 +83,22 @@ grey(sombras(50))
 library(dplyr)
 50 %>%  sombras %>% grey #shift cmd M
 
-tapply(bond$tomatoRotten, bond$Actor_p, max)
+#otros ejemplos:
+#calcular sobre los abejorros:
+#max temperatura por especie
+
+#familia apply()
+?tapply
+tapply(dat$Highest_temp, dat$Gen_sp, max)
+dat <- droplevels(dat)
+tapply(dat$Highest_temp, dat$Gen_sp, max)
 
 # aggregate es lento y poco flexible
-aggregate(tomatoRotten ~ Actor_p, 
-          data = bond, FUN = max)
+aggregate(Highest_temp ~ Gen_sp, 
+          data = dat, FUN = max)
+
+#dplyr
+dat %>% group_by(Gen_sp) %>% summarize(a = mean(Highest_temp))
 
 # dplyr como sintaxis
 # Verbos
@@ -66,29 +109,58 @@ aggregate(tomatoRotten ~ Actor_p,
 #* `summarise()` - like `aggregate`
 
 #Grouping
-bond %>% 
-  group_by(Actor_p) %>% 
-  summarise(max(tomatoRotten))
+babynames %>% 
+  group_by(year, sex) %>% 
+  filter(name == "Mary") %>% 
+  select(-prop)
 
-#por si quereis practicar con otro dataset interesante
+#otros ejemplos:
 install.packages("babynames")
 library(babynames)
+head(babynames)
+babynames
+
+babynamesdf <- as.data.frame(babynames)
+head(babynamesdf)
+
+#familia apply()
+?tapply
+tapply(babynamesdf$n, babynamesdf$year, max)
+
+# aggregate es lento y poco flexible
+aggregate(n ~ year, 
+          data = babynamesdf, FUN = max)
+
+#dplyr
 babynames %>% group_by(year, sex)
 
+# dplyr como sintaxis
+# Verbos
+#* `filter()` - subset rows; like `base::subset()`
+#* `arrange()` - reorder rows; like `order()`
+#* `select()` - select columns
+#* `mutate()` - add new columns
+#* `summarise()` - like `aggregate`
 
-#debug this function----
-#learn how to debug, split in pieces the problem, seacrh in stack overflow, learn diferent fixes are always available
+#Grouping
+babynames %>% 
+  group_by(year, sex) %>% 
+  filter(name == "Mary") %>% 
+  select(-prop)
+  
 
-#make one of those cases when drop = FALSE is needed.
+#Exercise 2: #debug this function-----
+#learn how to debug, split in pieces the problem, seacrh in stack overflow,
+  #learn that diferent fixes are always available
 
+source(file = "misc/function.R")
+#the function count_numbers will count how many times a given number appears
+#has the following arguments:
+#number: the number to search for
+#vector: the vector where to search the number
+#match: TRUE: return the number of matched numbers, FALSE return the number not matched numbres
 x <- c(1, NA, 3, 2, 4, 2)
 
-count_numbers <- function(number, vector = x, match = TRUE){
-  if(match) y <- x[x == number]
-  if(!match) y <- x[x != number]
-  length(y)
-}
-  
 count_numbers(number = 2, vector = x, match = TRUE) #wrong
 count_numbers(number = 5, vector = x, match = TRUE) #wrong
 count_numbers(number = 2, vector = x, match = FALSE) #right?

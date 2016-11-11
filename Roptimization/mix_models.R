@@ -1,4 +1,11 @@
-Quick and dirty notes on General Linear Mix Models
+#http://environmentalcomputing.net/mixed-models-1/----
+
+http://environmentalcomputing.net/mixed-models-2/
+  
+  http://environmentalcomputing.net/mixed-models-3/
+  
+  
+#Quick and dirty notes on General Linear Mix Models-----
 Posted on February 24, 2014
 My datasets tend to have random factors. I try to stick to general models whenever I can to avoid dealing with both random factors and complex error distributions (not always possible). I am compiling some notes here to avoid visiting the same R-forums every time I work in a new project. Those are some notes to self, but may be they are useful to someone else. Note that those are oversimplified notes, they assume you know your stats and your R and only want a cheat sheet. Also, they may contain errors/discrepancies with your philosophy (please notify me if you find errors, so I can update it!)
 
@@ -276,3 +283,8 @@ abline(a = b[[1]][2,1]+a[1], b= mean_$Petal.Width[2], col = "red")
 abline(a = b[[1]][3,1]+a[1], b= mean_$Petal.Width[3], col = "green")
 #and general response
 abline(a, lty = 2)
+
+
+
+#checking residuals----
+https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html
