@@ -1,8 +1,71 @@
-#http://environmentalcomputing.net/mixed-models-1/----
+#This script introduce to null models, specially checking assumptions.
 
-http://environmentalcomputing.net/mixed-models-2/
-  
-  http://environmentalcomputing.net/mixed-models-3/
+#The data:
+
+
+#Mixed models assumptions:
+#Assumptions. Mixed models make some important assumptions (we’ll check these later for our examples)
+
+#The observed y are independent, conditional on some predictors x
+#The response y are normally distributed conditional on some predictors x
+#The response y has constant variance, conditional on some predictors x
+#There is a straight line relationship between y and the predictors x and random effects z
+#Random effects z are independent of y.
+#Random effects z are normally distributed
+
+library(lme4)
+
+Estuaries <- read.csv("data/Estuaries.csv", header = T)
+head(Estuaries)
+
+ft.estu <- lmer(Total ~ Modification + (1|Estuary),data = Estuaries, REML=T)
+#assumptions:
+qqnorm(residuals(ft.estu))
+scatter.smooth(residuals(ft.estu)~fitted(ft.estu))
+
+ft.estu <- lmer(Total ~ Modification + (1|Estuary), data=Estuaries, REML=F)
+ft.estu.0 <- lmer(Total ~ (1|Estuary), data=Estuaries, REML=F)
+
+summary(ft.estu)
+
+anova(ft.estu.0,ft.estu)
+confint(ft.estu)
+
+ModEst <- unique(Estuaries[c("Estuary", "Modification")]) #find which Estuaries are modified
+cols <- as.numeric(ModEst[order(ModEst[,1]),2])+3 #Assign colour by modification
+boxplot(Total~ Estuary,data=Estuaries,col=cols,xlab="Estuary",ylab="Total invertebrates")
+legend("bottomleft", inset=.02,
+       c(" Modified "," Pristine "), fill=unique(cols), horiz=TRUE, cex=0.8)
+is.mod <- as.numeric(ModEst[order(ModEst[,1]),2])-1 #0 if Modified, 1 if Pristine
+Est.means <- coef(ft.estu)$Estuary[,1]+coef(ft.estu)$Estuary[,2]*is.mod #Model means
+stripchart(Est.means~ sort(unique(Estuary)),data=Estuaries,pch=18,col="red",vertical = TRUE,add=TRUE)
+
+#Detailed explanation at: http://environmentalcomputing.net/mixed-models-1/
+
+#when data has many zeros:
+#binary data:
+Estuaries$HydroidPres <- Estuaries$Hydroid > 0
+fit.bin <- glmer(HydroidPres ~ Modification + (1|Estuary), family=binomial, data=Estuaries)
+
+par(mfrow=c(1,2))
+plot(residuals(fit.bin)~fitted(fit.bin),main="residuals v.s. Fitted")
+qqnorm(residuals(fit.bin))
+
+#pval??
+
+fit.pois <- glmer(Hydroid ~ Modification + (1|Estuary) ,family=poisson, data=Estuaries)
+par(mfrow=c(1,2))
+plot(residuals(fit.pois)~fitted(fit.pois),main="Residuals vs. Fitted")
+qqnorm(residuals(fit.pois))
+
+fit.pois2 <- glmer(Schizoporella.errata ~ Modification + (1|Estuary), family=poisson,  data=Estuaries)
+par(mfrow=c(1,2))
+plot(residuals(fit.pois)~fitted(fit.pois),main="residuals vs. Fitted")
+qqnorm(residuals(fit.pois))
+
+#negbin!
+
+#detailed explnation here:  http://environmentalcomputing.net/mixed-models-3/
   
   
 #Quick and dirty notes on General Linear Mix Models-----
