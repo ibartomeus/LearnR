@@ -12,73 +12,75 @@
 #Random effects z are independent of y.
 #Random effects z are normally distributed
 
-install.packages("glmmADMB") 
-install.packages("R2admb") 
 library(nlme)
 library(lme4)
-library("glmmADMB")
-library("R2admb")
+library(MASS)
 
-fit_zipoiss <- glmmadmb(NCalls~(FoodTreatment+ArrivalTime)*SexParent+ 
-                          offset(logBroodSize)+(1|Nest), 
-                        data=Owls, 
-                        zeroInflation=TRUE, 
-                        family="poisson")
-
+#The data
 Estuaries <- read.csv("data/Estuaries.csv", header = T)
 head(Estuaries)
 
-ft.estu <- lmer(Total ~ Modification + (1|Estuary),data = Estuaries, REML=T)
+ft.estu <- lme(Total ~ Modification, random = ~ 1 |Estuary, data = Estuaries, method = "REML")
+
+ft.estu4 <- lmer(Total ~ Modification + (1|Estuary),data = Estuaries, REML=T)
 #assumptions:
 qqnorm(residuals(ft.estu))
 scatter.smooth(residuals(ft.estu)~fitted(ft.estu))
 
-ft.estu <- lmer(Total ~ Modification + (1|Estuary), data=Estuaries, REML=F)
-ft.estu.0 <- lmer(Total ~ (1|Estuary), data=Estuaries, REML=F)
+qqnorm(residuals(ft.estu4))
+scatter.smooth(residuals(ft.estu)~fitted(ft.estu4))
 
 summary(ft.estu)
+summary(ft.estu4)
 
-anova(ft.estu.0,ft.estu)
-confint(ft.estu)
+intervals(ft.estu)
+confint(ft.estu4)
 
-ModEst <- unique(Estuaries[c("Estuary", "Modification")]) #find which Estuaries are modified
-cols <- as.numeric(ModEst[order(ModEst[,1]),2])+3 #Assign colour by modification
-boxplot(Total~ Estuary,data=Estuaries,col=cols,xlab="Estuary",ylab="Total invertebrates")
-legend("bottomleft", inset=.02,
-       c(" Modified "," Pristine "), fill=unique(cols), horiz=TRUE, cex=0.8)
-is.mod <- as.numeric(ModEst[order(ModEst[,1]),2])-1 #0 if Modified, 1 if Pristine
-Est.means <- coef(ft.estu)$Estuary[,1]+coef(ft.estu)$Estuary[,2]*is.mod #Model means
-stripchart(Est.means~ sort(unique(Estuary)),data=Estuaries,pch=18,col="red",vertical = TRUE,add=TRUE)
+boxplot(Estuaries$Total ~ Estuaries$Modification)
 
 #Detailed explanation at: http://environmentalcomputing.net/mixed-models-1/
 
-#when data has many zeros:
+#when data do not hold the assumptions:
+
+ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, data = Estuaries, method = "REML")
+qqnorm(residuals(ft.Hydroid))
+scatter.smooth(residuals(ft.Hydroid)~fitted(ft.Hydroid))
+boxplot(Estuaries$Modification, residuals(ft.Hydroid, type = "norm"))
+
+ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, data = Estuaries, method = "REML", weights=varIdent(form=~1|Modification))
+qqnorm(residuals(ft.Hydroid, type = "normalized"))
+scatter.smooth(residuals(ft.Hydroid, type = "normalized") ~ fitted(ft.Hydroid))
+
+#Plan B:
+
 #binary data:
 Estuaries$HydroidPres <- Estuaries$Hydroid > 0
+
 fit.bin <- glmer(HydroidPres ~ Modification + (1|Estuary), family=binomial, data=Estuaries)
 
-par(mfrow=c(1,2))
+#Check for overdispersion
+#the ratio of residual deviance to degrees of freedom < 1
 plot(residuals(fit.bin)~fitted(fit.bin),main="residuals v.s. Fitted")
 qqnorm(residuals(fit.bin))
 
-#pval??
+summary(fit.bin)
+boxplot(Estuaries$HydroidPres ~ Estuaries$Modification)
+
+#Poisson
 
 fit.pois <- glmer(Hydroid ~ Modification + (1|Estuary) ,family=poisson, data=Estuaries)
-par(mfrow=c(1,2))
 plot(residuals(fit.pois)~fitted(fit.pois),main="Residuals vs. Fitted")
 qqnorm(residuals(fit.pois))
+#overdispersion!
 
-fit.pois2 <- glmer(Schizoporella.errata ~ Modification + (1|Estuary), family=poisson,  data=Estuaries)
-par(mfrow=c(1,2))
-plot(residuals(fit.pois)~fitted(fit.pois),main="residuals vs. Fitted")
-qqnorm(residuals(fit.pois))
+#Plan C: negbin!
 
-#negbin!
+fit.nb <- glmer.nb(Hydroid ~ Modification + (1|Estuary), data=Estuaries)
+plot(fit.nb, resid(.) ~ as.numeric(Estuary))# works, as long as data 'dd' is found
+summary(fit.nb)
 
 #detailed explnation here:  http://environmentalcomputing.net/mixed-models-3/
   
-  
-
 
 #This shows how to get the random slopes and CI's for each level in a hierarchical model----
 
@@ -144,3 +146,8 @@ abline(a, lty = 2)
 
 #checking residuals----
 #https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html
+
+install.packages("DHARMa")
+library("DHARMa")
+simulationOutput <- simulateResiduals(fittedModel = fit.pois2, n = 250)
+plotSimulatedResiduals(simulationOutput = simulationOutput)

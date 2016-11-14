@@ -31,7 +31,7 @@ The response y has constant variance, conditional on some predictors x
 
 =======================
 There is a straight line relationship between y and the predictors x and random effects z
->look for nn-linearities visually  
+>look for non-linearities visually  
 
 ========================
 Random effects z are independent of y and Random effects z are normally distributed
@@ -92,7 +92,7 @@ But if we want to see if there are general trends regardless of A, but we want t
 
 `lme(y ~ x, random = ~1 | A)`
 
-b) random slope model (we expect the trend to be dependent on species identity)
+b) random slope model (we expect the trend to be dependent on species identity)  
 `lme(y ~ x, random = ~1 + x | A)`
 
 In addition, now we can extract the random effects
