@@ -8,7 +8,7 @@ Como serán los siguientes 5 días de vuestra vida?
 =========================================================
 
 * Introducción (yo hablando; 45')
-* Programacióon en R (yo) + Visualización de datos (Paco)
+* Programación en R (yo) + Visualización de datos (Paco)
 * Modelos mixtos (yo) + Modelos nulos (yo)
 * Bayesiano (Paco) + Simulaciones (yo)
 * Multivariante (yo) + git (Paco)
@@ -40,7 +40,7 @@ Los Básicos
 - Download R
 - R desde Rstudio (download Rstudio)
 - [Material del curso](https://github.com/Rstats-courses/cursoR-AEET2016)
-- Carpeta 'ejercicios' y 'guia'
+- Carpeta 'ejercicios' y 'ejercicios_resueltos'
 
 
 Y si no se algo? Uso de Stackoverflow.
@@ -105,6 +105,16 @@ No puedes reproducir
 ...lo que has perdido. Y si necesitas un archivo que existio hace 1, 10 o 100 dias?
 - Incremental backups (minimo)
 - Version control (mejor). **Git** (y **GitHub**) es el más popular
+
+
+Estadística
+=============================================
+
+- Es una ciencia dinámica.
+- Es una ciencia compleja y con diversas filosofias.
+- Es una herramienta, no un fin.
+- No puede solucionar malos datos (e.g. baja replicación). 
+- No puede solucionar un mal diseño experimental.
 
 
 Abrir R studio
