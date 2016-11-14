@@ -149,5 +149,9 @@ abline(a, lty = 2)
 
 install.packages("DHARMa")
 library("DHARMa")
-simulationOutput <- simulateResiduals(fittedModel = fit.pois2, n = 250)
+simulationOutput <- simulateResiduals(fittedModel = fit.pois, n = 250)
 plotSimulatedResiduals(simulationOutput = simulationOutput)
+testUniformity(simulationOutput = simulationOutput)
+testZeroInflation(simulationOutput)
+#with pois2 works!
+
