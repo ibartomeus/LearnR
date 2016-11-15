@@ -32,7 +32,7 @@ out <- data.frame(species = 1:10,
                   abundance_t = x)
 #simulate 1 years of data assuming t+1 = t + error (normally distributed)
 abundance_t1 <- out[,2] + rnorm(1, 2, 1) 
-out <- cbind(out, abundance_t1)
+out_ <- cbind(out, abundance_t1)
 #simulate 100 years now
 for(i in 1:100){
  abundance <- out[,i+1] + rnorm(1, 2, 1) 
@@ -79,7 +79,7 @@ sim <- function(mean, sd){
 
 sim(mean = 0, sd = 10)
 
-#Allow extinctions
+#Detect extinctions
 sim <- function(mean, sd){
   x <- rlnorm(10, 5, 1)
   out <- data.frame(species = 1:10,
@@ -88,7 +88,7 @@ sim <- function(mean, sd){
     abundance <- out[,i+1] + rnorm(10, mean, sd) 
     if(any(abundance < 0)){
       print("species went extinct")
-      abundance <- ifelse(abundance < 0, 0, abundance)
+      abundance <- ifelse(abundance < 0, -100, abundance)
     } 
     out <- cbind(out, abundance)
   }
