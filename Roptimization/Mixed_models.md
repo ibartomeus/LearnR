@@ -99,9 +99,9 @@ In addition, now we can extract the random effects
 
 `m$coefficients`
 
-fixed and random factors, so we can see the random intercepts (and slopes) as well as
+fixed and random factors, so we can see the random intercepts (and slopes) as well as `intervals(m)`
 
-`intervals(m)`
+note: Makes no sense to use random effects with few factors!
 
 To compare models in nlme
 ============================
@@ -150,6 +150,13 @@ Based in Nakagawa, S., Schielzeth, H. (2013), A general and simple method for ob
 `library(MuMIn)`
 
 `r.squaredGLMM(m)`
+
+=============================
+
+linear model -> lm()
+need to fix distribution -> glm()
+need random factors -> lme() or lmer()
+need random + distribution -> glmer()
 
 =============================
 

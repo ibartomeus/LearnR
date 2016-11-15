@@ -15,6 +15,9 @@
 library(nlme)
 library(lme4)
 library(MASS)
+library(visreg)
+install.packages("DHARMa")
+library("DHARMa")
 
 #The data
 Estuaries <- read.csv("data/Estuaries.csv", header = T)
@@ -37,17 +40,21 @@ intervals(ft.estu)
 confint(ft.estu4)
 
 boxplot(Estuaries$Total ~ Estuaries$Modification)
+visreg(ft.estu4, "Modification", by = "Estuary", scale="response")
 
 #Detailed explanation at: http://environmentalcomputing.net/mixed-models-1/
 
 #when data do not hold the assumptions:
 
-ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, data = Estuaries, method = "REML")
+ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, 
+                  data = Estuaries, method = "REML")
 qqnorm(residuals(ft.Hydroid))
 scatter.smooth(residuals(ft.Hydroid)~fitted(ft.Hydroid))
 boxplot(Estuaries$Modification, residuals(ft.Hydroid, type = "norm"))
 
-ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, data = Estuaries, method = "REML", weights=varIdent(form=~1|Modification))
+ft.Hydroid <- lme(Hydroid ~ Modification, random = ~ 1 |Estuary, 
+                  data = Estuaries, method = "REML", 
+                  weights=varIdent(form=~1|Modification))
 qqnorm(residuals(ft.Hydroid, type = "normalized"))
 scatter.smooth(residuals(ft.Hydroid, type = "normalized") ~ fitted(ft.Hydroid))
 
@@ -56,28 +63,66 @@ scatter.smooth(residuals(ft.Hydroid, type = "normalized") ~ fitted(ft.Hydroid))
 #binary data:
 Estuaries$HydroidPres <- Estuaries$Hydroid > 0
 
-fit.bin <- glmer(HydroidPres ~ Modification + (1|Estuary), family=binomial, data=Estuaries)
+fit.bin <- glmer(HydroidPres ~ Modification + (1|Estuary), 
+                 family=binomial, data=Estuaries)
 
-#Check for overdispersion
-#the ratio of residual deviance to degrees of freedom < 1
+#residual plots are useless here: 
 plot(residuals(fit.bin)~fitted(fit.bin),main="residuals v.s. Fitted")
 qqnorm(residuals(fit.bin))
 
+#But there is always a solution
+simulationOutput <- simulateResiduals(fittedModel = fit.bin, n = 250)
+plotSimulatedResiduals(simulationOutput = simulationOutput)
+testUniformity(simulationOutput = simulationOutput)
+testZeroInflation(simulationOutput)
+
+#more on: https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html
+
+#Check for overdispersion
+#the ratio of residual deviance to degrees of freedom < 1
 summary(fit.bin)
 boxplot(Estuaries$HydroidPres ~ Estuaries$Modification)
+visreg(fit.bin, "Modification", by = "Estuary", scale="response")
 
 #Poisson
-
-fit.pois <- glmer(Hydroid ~ Modification + (1|Estuary) ,family=poisson, data=Estuaries)
+fit.pois <- glmer(Hydroid ~ Modification + (1|Estuary) ,
+                  family=poisson, data=Estuaries)
+#residuals plots are useless here
 plot(residuals(fit.pois)~fitted(fit.pois),main="Residuals vs. Fitted")
 qqnorm(residuals(fit.pois))
-#overdispersion!
+
+simulationOutput <- simulateResiduals(fittedModel = fit.pois, n = 250)
+plotSimulatedResiduals(simulationOutput = simulationOutput)
+testUniformity(simulationOutput = simulationOutput)
+testZeroInflation(simulationOutput)
+
+summary(fit.pois)
+visreg(fit.pois, "Modification", by = "Estuary", scale="response")
 
 #Plan C: negbin!
+hist(Estuaries$Schizoporella.errata)
 
-fit.nb <- glmer.nb(Hydroid ~ Modification + (1|Estuary), data=Estuaries)
-plot(fit.nb, resid(.) ~ as.numeric(Estuary))# works, as long as data 'dd' is found
+fit.nb <- glmer.nb(Schizoporella.errata ~ Modification + (1|Estuary), data=Estuaries)
+
+simulationOutput <- simulateResiduals(fittedModel = fit.nb, n = 999)
+plotSimulatedResiduals(simulationOutput = simulationOutput)
+testUniformity(simulationOutput = simulationOutput)
+testZeroInflation(simulationOutput)
+
 summary(fit.nb)
+visreg(fit.nb, "Modification", by = "Estuary", scale="response")
+
+#but:
+fit.pois2 <- glmer(Schizoporella.errata ~ Modification + (1|Estuary), 
+                   family = poisson, data=Estuaries)
+
+simulationOutput <- simulateResiduals(fittedModel = fit.pois2, n = 250)
+plotSimulatedResiduals(simulationOutput = simulationOutput)
+testUniformity(simulationOutput = simulationOutput)
+testZeroInflation(simulationOutput)
+
+summary(fit.pois2)
+visreg(fit.pois2, "Modification", by = "Estuary", scale="response")
 
 #detailed explnation here:  http://environmentalcomputing.net/mixed-models-3/
   
@@ -92,7 +137,6 @@ head(iris)
 plot(iris$Sepal.Width ~ iris$Petal.Width, col = iris$Species, las =1)
 
 #Our model with random slope and intercept
-library(lmer)
 m2 <- lmer(data = iris, Sepal.Width ~ Petal.Width + (1 + Petal.Width|Species))
 summary(m2)
 
@@ -105,6 +149,7 @@ b=ranef(m2, condVar=TRUE)
 b
 
 # Extract the variances of the random effects
+str(b)
 qq <- attr(b[[1]], "postVar") 
 qq
 e=(sqrt(qq)) 
@@ -144,14 +189,4 @@ abline(a, lty = 2)
 
 
 
-#checking residuals----
-#https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html
-
-install.packages("DHARMa")
-library("DHARMa")
-simulationOutput <- simulateResiduals(fittedModel = fit.pois, n = 250)
-plotSimulatedResiduals(simulationOutput = simulationOutput)
-testUniformity(simulationOutput = simulationOutput)
-testZeroInflation(simulationOutput)
-#with pois2 works!
 
